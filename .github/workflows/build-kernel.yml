@@ -1,0 +1,105 @@
+name: Build kernel
+on:
+  push:
+    branches: [main]
+    tags:
+      - linux-msft-wsl-*
+  schedule:
+    - cron: "42 18 * * *"
+jobs:
+  build-kernel:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3.0.0
+      - name: Check Kernel Version
+        id: get_version
+        run: |
+          if [[ "$EVENT_NAME" == "push" ]]; then
+            if [[ "$REF_TYPE" == "tag" ]]; then
+              MSFT_KERNEL_VER=${GITHUB_REF##*/}
+              MSFT_KERNEL_INFO=$(curl -sX GET "https://api.github.com/repos/microsoft/WSL2-Linux-Kernel/releases")
+              MSFT_KERNEL_URL=$(echo "${MSFT_KERNEL_INFO}" | jq -r ".[] | select(.tag_name == \"$MSFT_KERNEL_VER\").tarball_url")
+              MSFT_KERNEL_BODY=$(echo "${MSFT_KERNEL_INFO}" | jq -r ".[] | select(.tag_name == \"$MSFT_KERNEL_VER\").body")
+              echo -e "## Features\n${MSFT_KERNEL_BODY}" >/tmp/bodyfile.txt
+              sed -i "s|\(^[[:space:]]\+KERNEL_URL=\).*|\1${MSFT_KERNEL_URL}|g" build-kernel.sh
+              echo ::set-output name=MSFT_KERNEL_VER::$MSFT_KERNEL_VER
+            fi
+          else
+            REPO_KERNEL_INFO=$(curl -sX GET "https://api.github.com/repos/${{ github.repository }}/releases")
+            REPO_MSFT_KERNEL_VER=$(echo "${REPO_KERNEL_INFO}" | jq -r '[.[] | select(.prerelease == false)][0] | .tag_name')
+            REPO_KERNEL_VER=$(echo "${REPO_KERNEL_INFO}" | jq -r '[.[] | select(.prerelease == true)][0] | .tag_name')
+            MSFT_KERNEL_INFO=$(curl -sX GET "https://api.github.com/repos/microsoft/WSL2-Linux-Kernel/releases/latest")
+            MSFT_KERNEL_VER=$(echo "${MSFT_KERNEL_INFO}" | jq -r '.tag_name')
+            KERNEL_INFO=$(curl --silent https://www.kernel.org | sed -n '/<td id="latest_link">/,/<\/td>/p')
+            KERNEL_VER=linux-wsl-$(echo "${KERNEL_INFO}" | grep -Pom1 '(?<=>)([[:digit:]]{1,3}\.){2}[[:digit:]]{1,3}')
+            if [ "$MSFT_KERNEL_VER" != "$REPO_MSFT_KERNEL_VER" ]; then
+              MSFT_KERNEL_URL=$(echo "${MSFT_KERNEL_INFO}" | jq -r '.tarball_url')
+              MSFT_KERNEL_BODY=$(echo "${MSFT_KERNEL_INFO}" | jq -r '.body')
+              echo -e "## Features\n${MSFT_KERNEL_BODY}" >/tmp/bodyfile.txt
+              sed -i "s|\(^[[:space:]]\+KERNEL_URL=\).*|\1${MSFT_KERNEL_URL}|g" build-kernel.sh
+              echo ::set-output name=MSFT_KERNEL_VER::$MSFT_KERNEL_VER
+            elif [ "$KERNEL_VER" != "$REPO_KERNEL_VER" ]; then
+              KERNEL_URL=$(echo "${KERNEL_INFO}" | grep -Po 'http[^"]+')
+              sed -i "s|\(^[[:space:]]\+KERNEL_URL=\).*|\1${KERNEL_URL}|g" build-kernel.sh
+              echo ::set-output name=MSFT_KERNEL_VER::$KERNEL_VER
+              echo ::set-output name=IS_PRERELEASE::true
+            fi
+          fi
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          REF_TYPE: ${{ github.ref_type }}
+      - name: Create Pull Request
+        if: ${{ steps.get_version.outputs.MSFT_KERNEL_VER }}
+        id: cpr
+        uses: peter-evans/create-pull-request@v4.0.2
+        with:
+          add-paths: build-kernel.sh
+          base: main
+          commit-message: Update ${{ steps.get_version.outputs.MSFT_KERNEL_VER }}
+          author: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>
+          branch: release/${{ steps.get_version.outputs.MSFT_KERNEL_VER }}
+          delete-branch: true
+          title: Update ${{ steps.get_version.outputs.MSFT_KERNEL_VER }}
+          body: This PR will be merged automatically.
+      - name: Merge for Dependabot PRs
+        if: ${{ steps.get_version.outputs.MSFT_KERNEL_VER }}
+        run: gh pr merge $PR_URL --auto --delete-branch --squash
+        env:
+          PR_URL: ${{ steps.cpr.outputs.pull-request-url }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build Release
+        if: ${{ steps.get_version.outputs.MSFT_KERNEL_VER || github.event_name == 'push' }}
+        timeout-minutes: 60
+        run: |
+          docker-compose up
+          docker-compose down
+          tee -a /tmp/bodyfile.txt <<-EOF
+          ## sha256sum
+          \`\`\`
+          $(cat *.sha256)
+          \`\`\`
+          EOF
+      - name: GH Release
+        if: ${{ steps.get_version.outputs.MSFT_KERNEL_VER }}
+        uses: softprops/action-gh-release@v0.1.14
+        with:
+          body_path: /tmp/bodyfile.txt
+          prerelease: ${{ steps.get_version.outputs.IS_PRERELEASE == 'true' }}
+          files: |
+            wsl2-kernel-amd64
+            wsl2-kernel-arm64
+          tag_name: ${{ steps.get_version.outputs.MSFT_KERNEL_VER }}
+          fail_on_unmatched_files: true
+      - name: Rclone Sync
+        if: ${{ steps.get_version.outputs.IS_PRERELEASE }}
+        run: |
+          mkdir -p .config/rclone
+          tee -a .config/rclone/rclone.conf >/dev/null <<-EOF
+          ${{ secrets.RCLONE_CONFIG }}
+          EOF
+          docker run --rm --volume ${PWD}/.config:/config --volume ${PWD}/wsl2-kernel-amd64:/data/bzImage rclone/rclone copy /data/bzImage drive:/文档/工作路径/管理软件/
+          rm -rf .config/rclone

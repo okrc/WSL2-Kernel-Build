@@ -1,0 +1,10 @@
+version: "3.7"
+services:
+  WSL2-Kernel-Build:
+    environment:
+      - TZ=Asia/Chongqing
+    image: debian:testing-slim
+    command: bash ./build-kernel.sh
+    volumes:
+      - .:/build
+    working_dir: /build

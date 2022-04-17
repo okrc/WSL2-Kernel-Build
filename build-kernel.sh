@@ -7,7 +7,7 @@ apt-get update && apt-get install --no-install-recommends --yes curl ca-certific
     gcc-x86-64-linux-gnu gcc-aarch64-linux-gnu
 
 if [ ! -f 'kernel.tar.xz' ]; then
-    KERNEL_URL=$(curl --silent https://www.kernel.org | sed -n '/<td id="latest_link">/,/<\/td>/p' | grep -Po 'http[^"]+')
+    KERNEL_URL=https://api.github.com/repos/microsoft/WSL2-Linux-Kernel/tarball/linux-msft-wsl-5.10.16.3
     curl -C- -sL ${KERNEL_URL} -o kernel.tar.xz
 fi
 

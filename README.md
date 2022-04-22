@@ -2,9 +2,11 @@
 
 [![License][1]][LICENSE]
 [![BuildKernel][2]][3]
-[![Download][4]][RELEASE]
+[![Download][4]][RELEASE]  
 [![Release][5]][RELEASE]
-[![ReleaseDate][7]][RELEASE]
+[![ReleaseDate][7]][RELEASE]  
+[![PreRelease][6]][RELEASE]
+[![PreReleaseDate][8]][RELEASE]
 
 ## Build & install
 

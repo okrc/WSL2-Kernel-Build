@@ -2,11 +2,11 @@
 
 [![License][1]][LICENSE]
 [![BuildKernel][2]][3]
-[![Download][4]][RELEASE]  
+[![Download][4]][PRERELEASE]  
 [![Release][5]][RELEASE]
 [![ReleaseDate][7]][RELEASE]  
-[![PreRelease][6]][RELEASE]
-[![PreReleaseDate][8]][RELEASE]
+[![PreRelease][6]][PRERELEASE]
+[![PreReleaseDate][8]][PRERELEASE]
 
 ## Build & install
 
@@ -33,6 +33,7 @@ kernel=C:\\Users\\okrc\\bzImage     # your path
 [8]: https://img.shields.io/github/release-date-pre/okrc/WSL2-Kernel-Build?label=pre-release-date
 
 [LICENSE]: LICENSE
-[RELEASE]: https://github.com/okrc/WSL2-Kernel-Build/releases
+[RELEASE]: https://github.com/okrc/WSL2-Kernel-Build/releases/latest
+[PRERELEASE]: https://github.com/okrc/WSL2-Kernel-Build/releases
 [WSL2-Linux-Kernel REPO]: https://github.com/microsoft/WSL2-Linux-Kernel
 [The-Linux-Kernel REPO]: https://www.kernel.org

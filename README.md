@@ -13,8 +13,7 @@
 ### **Docker build**
 
 ``` sh
-docker-compose up
-docker-compose down
+docker run --rm --volume ${PWD}:/prefix --workdir /prefix debian:testing-slim bash ./build-kernel.sh
 ```
 
 ### **WSLCONFIG**

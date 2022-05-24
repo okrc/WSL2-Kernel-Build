@@ -6,6 +6,7 @@ on:
       - linux-msft-wsl-*
   schedule:
     - cron: "42 18 * * *"
+  workflow_dispatch:
 jobs:
   build-kernel:
     runs-on: ubuntu-latest

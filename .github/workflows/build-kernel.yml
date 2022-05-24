@@ -35,7 +35,7 @@ jobs:
             MSFT_KERNEL_INFO=$(curl -sX GET "https://api.github.com/repos/microsoft/WSL2-Linux-Kernel/releases/latest")
             MSFT_KERNEL_VER=$(echo "${MSFT_KERNEL_INFO}" | jq -r '.tag_name')
             KERNEL_INFO=$(curl --silent https://www.kernel.org | sed -n '/<td id="latest_link">/,/<\/td>/p')
-            KERNEL_VER=linux-wsl-$(echo "${KERNEL_INFO}" | grep -Pom1 '(?<=>)([[:digit:]]{1,3}\.){2}[[:digit:]]{1,3}')
+            KERNEL_VER=linux-wsl-$(echo "${KERNEL_INFO}" | grep -Pom1 '(?<=>)([[:digit:]]{1,3}\.){1,2}[[:digit:]]{1,3}')
             if [ "$MSFT_KERNEL_VER" != "$REPO_MSFT_KERNEL_VER" ]; then
               MSFT_KERNEL_URL=$(echo "${MSFT_KERNEL_INFO}" | jq -r '.tarball_url')
               MSFT_KERNEL_BODY=$(echo "${MSFT_KERNEL_INFO}" | jq -r '.body')

@@ -26,7 +26,7 @@ kernel=C:\\Users\\okrc\\bzImage     # your path
 [3]: https://github.com/okrc/WSL2-Kernel-Build/actions/workflows/build-kernel.yml
 [4]: https://img.shields.io/github/downloads/okrc/WSL2-Kernel-Build/total
 [5]: https://img.shields.io/github/v/release/okrc/WSL2-Kernel-Build?display_name=release&sort=date
-[6]: https://img.shields.io/github/v/release/okrc/WSL2-Kernel-Build?display_name=release&include_prereleases&label=pre-release&sort=date
+[6]: https://img.shields.io/github/v/release/okrc/WSL2-Kernel-Build?display_name=release&color=teal&include_prereleases&label=pre-release&sort=date
 
 [LICENSE]: LICENSE
 [RELEASE]: https://github.com/okrc/WSL2-Kernel-Build/releases/latest

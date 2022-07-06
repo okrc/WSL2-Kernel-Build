@@ -101,5 +101,6 @@ jobs:
           tee -a .config/rclone/rclone.conf >/dev/null <<-EOF
           ${{ secrets.RCLONE_CONFIG }}
           EOF
-          docker run --rm --volume ${PWD}/.config:/config --volume ${PWD}/wsl2-kernel-amd64:/data/bzImage rclone/rclone copy /data/bzImage drive:/文档/工作路径/管理软件/
+          docker run --rm --volume ${PWD}/.config:/config --volume ${PWD}/wsl2-kernel-amd64:/data/wsl2-kernel-amd64 rclone/rclone copy /data/wsl2-kernel-amd64 drive:/devtools/wslkernel/
+          docker run --rm --volume ${PWD}/.config:/config --volume ${PWD}/wsl2-kernel-arm64:/data/wsl2-kernel-arm64 rclone/rclone copy /data/wsl2-kernel-arm64 drive:/devtools/wslkernel/
           rm -rf .config/rclone

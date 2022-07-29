@@ -7,7 +7,7 @@ apt-get update && apt-get install --no-install-recommends --yes curl ca-certific
     gcc-x86-64-linux-gnu gcc-aarch64-linux-gnu
 
 if [ ! -f 'kernel.tar.xz' ]; then
-    KERNEL_URL=https://cdn.kernel.org/pub/linux/kernel/v5.x/linux-5.18.14.tar.xz
+    KERNEL_URL=https://cdn.kernel.org/pub/linux/kernel/v5.x/linux-5.18.15.tar.xz
     curl -C- -sL ${KERNEL_URL} -o kernel.tar.xz
 fi
 

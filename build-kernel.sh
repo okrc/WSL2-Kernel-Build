@@ -16,9 +16,9 @@ build_amd64_kernel() {
     tar xf kernel.tar.xz --strip-components=1 -C $TMPDIR
     curl -s "https://raw.githubusercontent.com/microsoft/WSL2-Linux-Kernel/${CONFIG_BRA}/Microsoft/config-wsl" |
         sed -e 's/^#[[:space:]]\(CONFIG_BLK_DEV_THROTTLING\b\).*/\1=y/g' \
-            -e 's/^#[[:space:]]\(CONFIG_NFT_\(COMPAT\|NAT\)\b\).*/\1=y/g' \
             -e 's/^#[[:space:]]\(CONFIG_IPV6_MULTIPLE_TABLES\b\).*/\1=y/g' \
-            -e 's/^#[[:space:]]\(CONFIG_NFT_\(CT\|FIB_IPV\(4\|6\)\)\b\).*/\1=y/g' \
+            -e 's/^#[[:space:]]\(CONFIG_NFT_FIB_IPV4\b\).*/\1=y/g' \
+            -e 's/^#[[:space:]]\(CONFIG_NFT_FIB_IPV6\b\).*/\1=y/g' \
             >$TMPDIR/.config
     (cd $TMPDIR && make -j$(nproc) ARCH=x86_64 CROSS_COMPILE=x86_64-linux-gnu-)
     cp $TMPDIR/arch/x86/boot/bzImage ./wsl2-kernel-amd64
@@ -31,9 +31,9 @@ build_arm64_kernel() {
     tar xf kernel.tar.xz --strip-components=1 -C $TMPDIR
     curl -s "https://raw.githubusercontent.com/microsoft/WSL2-Linux-Kernel/${CONFIG_BRA}/Microsoft/config-wsl-arm64" |
         sed -e 's/^#[[:space:]]\(CONFIG_BLK_DEV_THROTTLING\b\).*/\1=y/g' \
-            -e 's/^#[[:space:]]\(CONFIG_NFT_\(COMPAT\|NAT\)\b\).*/\1=y/g' \
             -e 's/^#[[:space:]]\(CONFIG_IPV6_MULTIPLE_TABLES\b\).*/\1=y/g' \
-            -e 's/^#[[:space:]]\(CONFIG_NFT_\(CT\|FIB_IPV\(4\|6\)\)\b\).*/\1=y/g' \
+            -e 's/^#[[:space:]]\(CONFIG_NFT_FIB_IPV4\b\).*/\1=y/g' \
+            -e 's/^#[[:space:]]\(CONFIG_NFT_FIB_IPV6\b\).*/\1=y/g' \
             >$TMPDIR/.config
     (cd $TMPDIR && make -j$(nproc) ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu-)
     cp $TMPDIR/arch/arm64/boot/Image ./wsl2-kernel-arm64

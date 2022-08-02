@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
-CONFIG_BRA=linux-msft-wsl-5.10.y
+CONFIG_BRA=linux-msft-wsl-5.15.y
 
 apt-get update && apt-get install --no-install-recommends --yes curl ca-certificates xz-utils make flex bison libssl-dev libelf-dev bc python3-minimal dwarves \
     gcc-x86-64-linux-gnu gcc-aarch64-linux-gnu

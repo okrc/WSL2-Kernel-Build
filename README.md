@@ -2,9 +2,8 @@
 
 [![License][1]][LICENSE]
 [![BuildKernel][2]][3]
-[![Download][4]][PRERELEASE]
-[![Release][5]][RELEASE]
-[![PreRelease][6]][PRERELEASE]
+[![Release][4]][RELEASE]
+[![PreRelease][5]][PRERELEASE]
 
 ## Build & install
 
@@ -24,9 +23,8 @@ kernel=C:\\Users\\okrc\\bzImage     # your path
 [1]: https://img.shields.io/github/license/okrc/WSL2-Kernel-Build
 [2]: https://img.shields.io/github/workflow/status/okrc/WSL2-Kernel-Build/Build%20kernel?label=Build%20kernel
 [3]: https://github.com/okrc/WSL2-Kernel-Build/actions/workflows/build-kernel.yml
-[4]: https://img.shields.io/github/downloads/okrc/WSL2-Kernel-Build/total
-[5]: https://img.shields.io/github/v/release/okrc/WSL2-Kernel-Build?display_name=release&sort=date
-[6]: https://img.shields.io/github/v/release/okrc/WSL2-Kernel-Build?display_name=release&color=teal&include_prereleases&label=pre-release&sort=date
+[4]: https://img.shields.io/github/v/release/okrc/WSL2-Kernel-Build?display_name=release&sort=date
+[5]: https://img.shields.io/github/v/release/okrc/WSL2-Kernel-Build?display_name=release&color=teal&include_prereleases&label=pre-release&sort=date
 
 [LICENSE]: LICENSE
 [RELEASE]: https://github.com/okrc/WSL2-Kernel-Build/releases/latest

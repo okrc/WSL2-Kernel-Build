@@ -74,7 +74,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Build Release
         if: ${{ steps.get_version.outputs.MSFT_KERNEL_VER || github.event_name == 'push' }}
-        timeout-minutes: 60
+        timeout-minutes: 80
         run: |
           docker run --rm --env TZ=Asia/Chongqing --volume ${PWD}:/prefix --workdir /prefix debian:testing-slim ./build-kernel.sh
           tee -a /tmp/bodyfile.txt <<-EOF

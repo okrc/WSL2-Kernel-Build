@@ -3,6 +3,7 @@ on:
   push:
     branches: [main]
     tags:
+      - linux-wsl-*
       - linux-msft-wsl-*
   schedule:
     - cron: "42 18 * * *"
@@ -98,12 +99,12 @@ jobs:
         if: ${{ steps.get_version.outputs.MSFT_KERNEL_VER }}
         run: |
           git fetch --tags
-          LINUX_TAGS=$(git tag -l "linux-wsl-*" | head -n-3)
+          LINUX_TAGS=$(git tag --sort=taggerdate -l "linux-wsl-*" | head -n-3)
           for TAG in ${LINUX_TAGS[@]}; do
             gh release delete ${TAG} --yes
             git tag -d ${TAG}
           done
-          MSFT_TAGS=$(git tag -l "linux-msft-wsl-*" | head -n-5)
+          MSFT_TAGS=$(git tag --sort=taggerdate -l "linux-msft-wsl-*" | head -n-5)
           for TAG in ${MSFT_TAGS[@]}; do
             gh release delete ${TAG} --yes
             git tag -d ${TAG}

@@ -57,7 +57,7 @@ jobs:
       - name: Create Pull Request
         if: ${{ steps.get_version.outputs.MSFT_KERNEL_VER }}
         id: cpr
-        uses: peter-evans/create-pull-request@v4.1.4
+        uses: peter-evans/create-pull-request@v4.2.0
         with:
           add-paths: build-kernel.sh
           base: main

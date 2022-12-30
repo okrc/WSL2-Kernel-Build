@@ -10,7 +10,7 @@
 ### **Docker build**
 
 ``` sh
-docker run --rm --volume ${PWD}:/prefix --workdir /prefix debian:testing-slim ./build-kernel.sh
+docker run --rm --volume ${PWD}:/prefix --workdir /prefix debian:stable-slim ./build-kernel.sh
 ```
 
 ### **WSLCONFIG**
@@ -21,7 +21,7 @@ kernel=C:\\Users\\okrc\\bzImage     # your path
 ```
 
 [1]: https://img.shields.io/github/license/okrc/WSL2-Kernel-Build
-[2]: https://img.shields.io/github/workflow/status/okrc/WSL2-Kernel-Build/Build%20kernel?label=Build%20kernel
+[2]: https://img.shields.io/github/actions/workflow/status/okrc/WSL2-Kernel-Build/build-kernel.yml?branch=main
 [3]: https://github.com/okrc/WSL2-Kernel-Build/actions/workflows/build-kernel.yml
 [4]: https://img.shields.io/github/v/release/okrc/WSL2-Kernel-Build?display_name=release&sort=date
 [5]: https://img.shields.io/github/v/release/okrc/WSL2-Kernel-Build?display_name=release&color=teal&include_prereleases&label=pre-release&sort=date

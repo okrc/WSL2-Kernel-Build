@@ -10,7 +10,7 @@
 ### **Docker build**
 
 ``` sh
-docker run --rm --volume ${PWD}:/prefix --workdir /prefix debian:stable-slim ./build-kernel.sh
+docker run --rm --volume ${PWD}:/prefix --workdir /prefix ubuntu ./build-kernel.sh
 ```
 
 ### **WSLCONFIG**

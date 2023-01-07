@@ -1,8 +1,19 @@
 #!/usr/bin/env bash
 set -e
 
-apt-get update && apt-get install --no-install-recommends --yes curl ca-certificates xz-utils make flex bison libssl-dev libelf-dev bc python3-minimal dwarves \
-    gcc-x86-64-linux-gnu gcc-aarch64-linux-gnu
+VERSION_CODENAME=$(grep -Po '(?<=VERSION_CODENAME=)[[:alpha:]]+' /etc/os-release)
+
+apt-get update && apt-get install --no-install-recommends --yes curl ca-certificates gpg xz-utils make flex bison libssl-dev libelf-dev bc python3-minimal dwarves tzdata
+
+curl -fsSL https://apt.llvm.org/llvm-snapshot.gpg.key | gpg --dearmor \
+    -o /usr/share/keyrings/llvm-apt-archive-keyring.gpg
+echo \
+    "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/llvm-apt-archive-keyring.gpg] \
+https://apt.llvm.org/${VERSION_CODENAME} llvm-toolchain-${VERSION_CODENAME} main
+# deb-src [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/llvm-apt-archive-keyring.gpg] \
+https://apt.llvm.org/${VERSION_CODENAME} llvm-toolchain-${VERSION_CODENAME} main" | tee /etc/apt/sources.list.d/llvm-apt.list >/dev/null
+
+apt-get update && apt-get install --no-install-recommends --yes clang lld llvm
 
 if [ ! -f 'kernel.tar.xz' ]; then
     KERNEL_URL=https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-6.1.4.tar.xz
@@ -26,14 +37,14 @@ build_config() {
 
 build_amd64_kernel() {
     build_config config-wsl
-    (cd $TMPDIR && make -j$(nproc) ARCH=x86_64 CROSS_COMPILE=x86_64-linux-gnu-)
+    (cd $TMPDIR && make -j$(nproc) ARCH=x86_64 LLVM=1)
     cp $TMPDIR/arch/x86/boot/bzImage ./wsl2-kernel-amd64
     sha256sum wsl2-kernel-amd64 >./wsl2-kernel-amd64.sha256
 }
 
 build_arm64_kernel() {
     build_config config-wsl-arm64
-    (cd $TMPDIR && make -j$(nproc) ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu-)
+    (cd $TMPDIR && make -j$(nproc) ARCH=arm64 LLVM=1)
     cp $TMPDIR/arch/arm64/boot/Image ./wsl2-kernel-arm64
     sha256sum wsl2-kernel-arm64 >./wsl2-kernel-arm64.sha256
 }
@@ -41,4 +52,4 @@ build_arm64_kernel() {
 build_amd64_kernel
 build_arm64_kernel
 
-rm -rf $TMPDIR config-wsl{,-arm64}
+rm -rf $TMPDIR config-wsl{,-arm64} /var/lib/apt/lists/

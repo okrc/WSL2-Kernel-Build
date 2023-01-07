@@ -77,7 +77,7 @@ jobs:
         if: ${{ steps.get_version.outputs.MSFT_KERNEL_VER || github.event_name == 'push' }}
         timeout-minutes: 80
         run: |
-          docker run --rm --env TZ=Etc/GMT-8 --volume ${PWD}:/prefix --workdir /prefix debian:stable-slim ./build-kernel.sh
+          docker run --rm --env TZ=Etc/GMT-8 --volume ${PWD}:/prefix --workdir /prefix ubuntu ./build-kernel.sh
           tee -a /tmp/bodyfile.txt <<-EOF
           ## sha256sum
           \`\`\`

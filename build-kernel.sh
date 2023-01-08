@@ -37,7 +37,22 @@ build_config() {
 
 build_amd64_kernel() {
     build_config config-wsl
-    (cd $TMPDIR && make -j$(nproc) ARCH=x86_64 LLVM=1)
+    (
+        cd $TMPDIR
+
+        set +e
+        RUSTC_VERSION=$(echo ${RUSTC_VERSION:-$(scripts/min-tool-version.sh rustc 2>/dev/null)} | grep -Po '^([[:digit:]]{1,3}\.){1,2}[[:digit:]]{1,3}$')
+        set -e
+
+        if [ ! -z ${RUSTC_VERSION} ]; then
+            sh <(curl -fsSL https://sh.rustup.rs) --quiet -y --default-toolchain $(scripts/min-tool-version.sh rustc) --profile minimal --component rust-src
+            . "$HOME/.cargo/env"
+            cargo install --locked --version $(scripts/min-tool-version.sh bindgen) bindgen
+            make LLVM=1 rustavailable
+        fi
+
+        make -j$(nproc) ARCH=x86_64 LLVM=1
+    )
     cp $TMPDIR/arch/x86/boot/bzImage ./wsl2-kernel-amd64
     sha256sum wsl2-kernel-amd64 >./wsl2-kernel-amd64.sha256
 }

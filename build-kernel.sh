@@ -16,7 +16,7 @@ https://apt.llvm.org/${VERSION_CODENAME} llvm-toolchain-${VERSION_CODENAME} main
 apt-get update && apt-get install --no-install-recommends --yes clang lld llvm
 
 if [ ! -f 'kernel.tar.xz' ]; then
-    KERNEL_URL=https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-6.1.5.tar.xz
+    KERNEL_URL=null
     curl -C- -sL ${KERNEL_URL} -o kernel.tar.xz
 fi
 

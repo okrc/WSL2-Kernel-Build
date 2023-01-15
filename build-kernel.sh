@@ -2,6 +2,7 @@
 set -e
 
 VERSION_CODENAME=$(grep -Po '(?<=VERSION_CODENAME=)[[:alpha:]]+' /etc/os-release)
+LLVM_VERSION=${LLVM_VERSION:-15}
 
 apt-get update && apt-get install --no-install-recommends --yes curl ca-certificates gpg xz-utils make flex bison libssl-dev libelf-dev bc python3-minimal dwarves tzdata
 
@@ -9,11 +10,12 @@ curl -fsSL https://apt.llvm.org/llvm-snapshot.gpg.key | gpg --dearmor \
     -o /usr/share/keyrings/llvm-apt-archive-keyring.gpg
 echo \
     "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/llvm-apt-archive-keyring.gpg] \
-https://apt.llvm.org/${VERSION_CODENAME} llvm-toolchain-${VERSION_CODENAME} main
+https://apt.llvm.org/${VERSION_CODENAME} llvm-toolchain-${VERSION_CODENAME}-${LLVM_VERSION} main
 # deb-src [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/llvm-apt-archive-keyring.gpg] \
-https://apt.llvm.org/${VERSION_CODENAME} llvm-toolchain-${VERSION_CODENAME} main" | tee /etc/apt/sources.list.d/llvm-apt.list >/dev/null
+https://apt.llvm.org/${VERSION_CODENAME} llvm-toolchain-${VERSION_CODENAME}-${LLVM_VERSION} main" | tee /etc/apt/sources.list.d/llvm-apt.list >/dev/null
 
-apt-get update && apt-get install --no-install-recommends --yes clang lld llvm
+apt-get update && apt-get install --no-install-recommends --yes clang-${LLVM_VERSION} lld-${LLVM_VERSION} llvm-${LLVM_VERSION}
+update-alternatives --install /usr/bin/cc cc /usr/bin/clang-${LLVM_VERSION} 100
 
 if [ ! -f 'kernel.tar.xz' ]; then
     KERNEL_URL=https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-6.1.6.tar.xz
@@ -48,10 +50,10 @@ build_amd64_kernel() {
             sh <(curl -fsSL https://sh.rustup.rs) --quiet -y --default-toolchain $(scripts/min-tool-version.sh rustc) --profile minimal --component rust-src
             . "$HOME/.cargo/env"
             cargo install --locked --version $(scripts/min-tool-version.sh bindgen) bindgen
-            make LLVM=1 rustavailable
+            make LLVM=-${LLVM_VERSION} rustavailable
         fi
 
-        make -j$(nproc) ARCH=x86_64 LLVM=1
+        make -j$(nproc) ARCH=x86_64 LLVM=-${LLVM_VERSION}
     )
     cp $TMPDIR/arch/x86/boot/bzImage ./wsl2-kernel-amd64
     sha256sum wsl2-kernel-amd64 >./wsl2-kernel-amd64.sha256
@@ -59,7 +61,7 @@ build_amd64_kernel() {
 
 build_arm64_kernel() {
     build_config config-wsl-arm64
-    (cd $TMPDIR && make -j$(nproc) ARCH=arm64 LLVM=1)
+    (cd $TMPDIR && make -j$(nproc) ARCH=arm64 LLVM=-${LLVM_VERSION})
     cp $TMPDIR/arch/arm64/boot/Image ./wsl2-kernel-arm64
     sha256sum wsl2-kernel-arm64 >./wsl2-kernel-arm64.sha256
 }

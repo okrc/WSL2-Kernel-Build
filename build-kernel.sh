@@ -18,7 +18,7 @@ apt-get update && apt-get install --no-install-recommends --yes clang-${LLVM_VER
 update-alternatives --install /usr/bin/cc cc /usr/bin/clang-${LLVM_VERSION} 100
 
 if [ ! -f 'kernel.tar.xz' ]; then
-    KERNEL_URL=https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-6.1.7.tar.xz
+    KERNEL_URL=https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-6.1.8.tar.xz
     curl -C- -sL ${KERNEL_URL} -o kernel.tar.xz
 fi
 

@@ -1,0 +1,7 @@
+kernel.tar.xz
+config-wsl
+config-wsl-arm64
+wsl2-kernel-amd64
+wsl2-kernel-arm64
+wsl2-kernel-amd64.sha256
+wsl2-kernel-arm64.sha256

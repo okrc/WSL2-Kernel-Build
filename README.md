@@ -10,7 +10,8 @@
 ### **Docker build**
 
 ``` sh
-docker run --rm --volume ${PWD}:/prefix --workdir /prefix ubuntu ./build-kernel.sh
+docker compose up
+docker compose down
 ```
 
 ### **WSLCONFIG**

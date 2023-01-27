@@ -1,22 +1,6 @@
 #!/usr/bin/env bash
 set -e
 
-VERSION_CODENAME=$(grep -Po '(?<=VERSION_CODENAME=)[[:alpha:]]+' /etc/os-release)
-LLVM_VERSION=${LLVM_VERSION:-15}
-
-apt-get update && apt-get install --no-install-recommends --yes curl ca-certificates gpg xz-utils make flex bison libssl-dev libelf-dev bc python3-minimal dwarves tzdata
-
-curl -fsSL https://apt.llvm.org/llvm-snapshot.gpg.key | gpg --dearmor \
-    -o /usr/share/keyrings/llvm-apt-archive-keyring.gpg
-echo \
-    "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/llvm-apt-archive-keyring.gpg] \
-https://apt.llvm.org/${VERSION_CODENAME} llvm-toolchain-${VERSION_CODENAME}-${LLVM_VERSION} main
-# deb-src [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/llvm-apt-archive-keyring.gpg] \
-https://apt.llvm.org/${VERSION_CODENAME} llvm-toolchain-${VERSION_CODENAME}-${LLVM_VERSION} main" | tee /etc/apt/sources.list.d/llvm-apt.list >/dev/null
-
-apt-get update && apt-get install --no-install-recommends --yes clang-${LLVM_VERSION} lld-${LLVM_VERSION} llvm-${LLVM_VERSION}
-update-alternatives --install /usr/bin/cc cc /usr/bin/clang-${LLVM_VERSION} 100
-
 if [ ! -f 'kernel.tar.xz' ]; then
     KERNEL_URL=https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-6.1.8.tar.xz
     curl -C- -sL ${KERNEL_URL} -o kernel.tar.xz

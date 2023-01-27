@@ -1,0 +1,10 @@
+version: '3'
+services:
+  kernel-builder:
+    build:
+      dockerfile: Dockerfile
+    container_name: kernel-builder
+    command: ./build-kernel.sh
+    volumes:
+      - .:/workspaces/WSL2-Kernel-Build
+    working_dir: /workspaces/WSL2-Kernel-Build

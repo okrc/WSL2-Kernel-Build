@@ -33,8 +33,9 @@
     "customizations": {
         "vscode": {
             "extensions": [
-                "EditorConfig.EditorConfig",
                 "foxundermoon.shell-format",
+                "EditorConfig.EditorConfig",
+                "mutantdino.resourcemonitor",
                 "redhat.vscode-yaml"
             ]
         }

@@ -28,7 +28,7 @@ jobs:
               MSFT_KERNEL_BODY=$(echo "${MSFT_KERNEL_INFO}" | jq -r ".[] | select(.tag_name == \"$MSFT_KERNEL_VER\").body")
               echo -e "## Features\n${MSFT_KERNEL_BODY}" >/tmp/bodyfile.txt
               sed -i "s|\(^[[:space:]]\+KERNEL_URL=\).*|\1${MSFT_KERNEL_URL}|g" build-kernel.sh
-              echo ::set-output name=MSFT_KERNEL_VER::$MSFT_KERNEL_VER
+              echo "MSFT_KERNEL_VER=$MSFT_KERNEL_VER" >> $GITHUB_OUTPUT
             fi
           else
             REPO_KERNEL_INFO=$(curl -sX GET "https://api.github.com/repos/${{ github.repository }}/releases")
@@ -38,17 +38,17 @@ jobs:
             MSFT_KERNEL_VER=$(echo "${MSFT_KERNEL_INFO}" | jq -r '.tag_name')
             KERNEL_INFO=$(curl --silent https://www.kernel.org | sed -n '/<td id="latest_link">/,/<\/td>/p')
             KERNEL_VER=linux-wsl-$(echo "${KERNEL_INFO}" | grep -Pom1 '(?<=>)([[:digit:]]{1,3}\.){1,2}[[:digit:]]{1,3}')
-            if [ "$MSFT_KERNEL_VER" != "$REPO_MSFT_KERNEL_VER" ]; then
+            if [ "$KERNEL_VER" != "$REPO_KERNEL_VER" ]; then
+              KERNEL_URL=$(echo "${KERNEL_INFO}" | grep -Po 'http[^"]+')
+              sed -i "s|\(^[[:space:]]\+KERNEL_URL=\).*|\1${KERNEL_URL}|g" build-kernel.sh
+              echo "MSFT_KERNEL_VER=$KERNEL_VER" >> $GITHUB_OUTPUT
+              echo "IS_PRERELEASE=true" >> $GITHUB_OUTPUT
+            elif [ "$MSFT_KERNEL_VER" != "$REPO_MSFT_KERNEL_VER" ]; then
               MSFT_KERNEL_URL=$(echo "${MSFT_KERNEL_INFO}" | jq -r '.tarball_url')
               MSFT_KERNEL_BODY=$(echo "${MSFT_KERNEL_INFO}" | jq -r '.body')
               echo -e "## Features\n${MSFT_KERNEL_BODY}" >/tmp/bodyfile.txt
               sed -i "s|\(^[[:space:]]\+KERNEL_URL=\).*|\1${MSFT_KERNEL_URL}|g" build-kernel.sh
-              echo ::set-output name=MSFT_KERNEL_VER::$MSFT_KERNEL_VER
-            elif [ "$KERNEL_VER" != "$REPO_KERNEL_VER" ]; then
-              KERNEL_URL=$(echo "${KERNEL_INFO}" | grep -Po 'http[^"]+')
-              sed -i "s|\(^[[:space:]]\+KERNEL_URL=\).*|\1${KERNEL_URL}|g" build-kernel.sh
-              echo ::set-output name=MSFT_KERNEL_VER::$KERNEL_VER
-              echo ::set-output name=IS_PRERELEASE::true
+              # echo "MSFT_KERNEL_VER=$MSFT_KERNEL_VER" >> $GITHUB_OUTPUT
             fi
           fi
         env:

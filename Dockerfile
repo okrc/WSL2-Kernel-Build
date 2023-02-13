@@ -11,4 +11,5 @@ RUN apt-get update; \
     DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends --yes clang-${LLVM_VERSION} lld-${LLVM_VERSION} llvm-${LLVM_VERSION}; \
     update-alternatives --install /usr/bin/cc cc /usr/bin/clang-${LLVM_VERSION} 100; \
     rm -rf /var/lib/apt/lists/*
-ENV TZ=Etc/GMT-8
+ARG TZ=Etc/GMT-8
+ENV TZ=${TZ}

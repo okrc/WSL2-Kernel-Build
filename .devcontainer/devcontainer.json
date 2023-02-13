@@ -20,6 +20,9 @@
         },
         "ghcr.io/devcontainers/features/github-cli:1": {}
     },
+    "remoteEnv": {
+        "TZ": "${containerEnv:TZ:Etc/GMT-8}"
+    },
     // Use 'forwardPorts' to make a list of ports inside the container available locally.
     // "forwardPorts": [],
     // Uncomment the next line to run commands after the container is created.

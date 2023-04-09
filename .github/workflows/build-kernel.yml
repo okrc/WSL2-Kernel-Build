@@ -48,7 +48,7 @@ jobs:
               MSFT_KERNEL_BODY=$(echo "${MSFT_KERNEL_INFO}" | jq -r '.body')
               echo -e "## Features\n${MSFT_KERNEL_BODY}" >/tmp/bodyfile.txt
               sed -i "s|\(^[[:space:]]\+KERNEL_URL=\).*|\1${MSFT_KERNEL_URL}|g" build-kernel.sh
-              # echo "MSFT_KERNEL_VER=$MSFT_KERNEL_VER" >> $GITHUB_OUTPUT
+              echo "MSFT_KERNEL_VER=$MSFT_KERNEL_VER" >> $GITHUB_OUTPUT
             fi
           fi
         env:

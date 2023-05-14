@@ -68,7 +68,7 @@ jobs:
           title: Update ${{ steps.get_version.outputs.MSFT_KERNEL_VER }}
           body: This PR will be merged automatically.
       - name: Merge for Dependabot PRs
-        if: ${{ steps.get_version.outputs.MSFT_KERNEL_VER }}
+        if: ${{ steps.get_version.outputs.MSFT_KERNEL_VER && steps.cpr.outputs.pull-request-url }}
         run: gh pr merge $PR_URL --auto --delete-branch --squash
         env:
           PR_URL: ${{ steps.cpr.outputs.pull-request-url }}

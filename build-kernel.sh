@@ -8,7 +8,7 @@ fi
 
 TMPDIR=$(mktemp -d)
 tar xf kernel.tar.xz --strip-components=1 -C $TMPDIR
-curl --silent --remote-name-all https://raw.githubusercontent.com/microsoft/WSL2-Linux-Kernel/linux-msft-wsl-6.1.y/Microsoft/config-wsl{,-arm64}
+curl --silent --remote-name-all https://raw.githubusercontent.com/microsoft/WSL2-Linux-Kernel/linux-msft-wsl-6.1.y/arch/{x86/configs/config-wsl,arm64/configs/config-wsl-arm64}
 
 build_config() {
     if [ -f "$1" ]; then

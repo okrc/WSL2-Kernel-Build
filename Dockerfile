@@ -1,5 +1,5 @@
 FROM ubuntu:latest
-ENV LLVM_VERSION=16
+ENV LLVM_VERSION=17
 RUN apt-get update; \
     DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends --yes curl ca-certificates gpg xz-utils make flex bison libssl-dev libelf-dev bc python3-minimal dwarves tzdata; \
     curl -fsSL https://apt.llvm.org/llvm-snapshot.gpg.key | gpg --dearmor -o /usr/share/keyrings/llvm-apt-archive-keyring.gpg; \

@@ -33,7 +33,7 @@ build_amd64_kernel() {
         if [ ! -z ${RUSTC_VERSION} ]; then
             sh <(curl -fsSL https://sh.rustup.rs) --quiet -y --default-toolchain $(scripts/min-tool-version.sh rustc) --profile minimal --component rust-src
             . "$HOME/.cargo/env"
-            cargo install --locked --version $(scripts/min-tool-version.sh bindgen) bindgen
+            cargo install --locked --version $(scripts/min-tool-version.sh bindgen) bindgen-cli
             make LLVM=-${LLVM_VERSION} rustavailable
         fi
 

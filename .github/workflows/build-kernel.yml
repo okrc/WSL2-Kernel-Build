@@ -88,7 +88,7 @@ jobs:
           EOF
       - name: GH Release
         if: ${{ steps.get_version.outputs.MSFT_KERNEL_VER }}
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           body_path: /tmp/bodyfile.txt
           prerelease: ${{ steps.get_version.outputs.IS_PRERELEASE == 'true' }}

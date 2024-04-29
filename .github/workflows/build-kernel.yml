@@ -14,6 +14,8 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
+    env:
+      RCLONE_CONFIG: ${{ secrets.RCLONE_CONFIG }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4.1.4
@@ -115,12 +117,12 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Rclone Sync
-        if: ${{ steps.get_version.outputs.IS_PRERELEASE }}
+        if: ${{ steps.get_version.outputs.IS_PRERELEASE && env.RCLONE_CONFIG }}
         run: |
           mkdir -p .config/rclone
           tee -a .config/rclone/rclone.conf >/dev/null <<-EOF
-          ${{ secrets.RCLONE_CONFIG }}
+          ${{ env.RCLONE_CONFIG }}
           EOF
-          docker run --rm --volume ${PWD}/.config:/config --volume ${PWD}/wsl2-kernel-amd64:/data/wsl2-kernel-amd64 rclone/rclone copy /data/wsl2-kernel-amd64 drive:/devtools/wslkernel/
-          docker run --rm --volume ${PWD}/.config:/config --volume ${PWD}/wsl2-kernel-arm64:/data/wsl2-kernel-arm64 rclone/rclone copy /data/wsl2-kernel-arm64 drive:/devtools/wslkernel/
+          docker run --rm --volume ${PWD}/.config:/config --volume ${PWD}/wsl2-kernel-amd64:/data/wsl2-kernel-amd64 rclone/rclone copy /data/wsl2-kernel-amd64 onedrive:/devtools/wslkernel/
+          docker run --rm --volume ${PWD}/.config:/config --volume ${PWD}/wsl2-kernel-arm64:/data/wsl2-kernel-arm64 rclone/rclone copy /data/wsl2-kernel-arm64 onedrive:/devtools/wslkernel/
           rm -rf .config/rclone

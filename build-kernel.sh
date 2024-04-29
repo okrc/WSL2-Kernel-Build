@@ -13,7 +13,6 @@ curl --silent --remote-name-all https://raw.githubusercontent.com/microsoft/WSL2
 build_config() {
     if [ -f "$1" ]; then
         sed -e 's/^#[[:space:]]\(CONFIG_BLK_DEV_THROTTLING\b\).*/\1=y/g' \
-            -e 's/^#[[:space:]]\(CONFIG_IPV6_MULTIPLE_TABLES\b\).*/\1=y/g' \
             -e 's/^#[[:space:]]\(CONFIG_NFT_FIB_IPV4\b\).*/\1=y/g' \
             -e 's/^#[[:space:]]\(CONFIG_NFT_FIB_IPV6\b\).*/\1=y/g' \
             -e "w $TMPDIR/.config" \

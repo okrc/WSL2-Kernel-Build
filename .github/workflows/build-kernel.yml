@@ -18,7 +18,7 @@ jobs:
       RCLONE_CONFIG: ${{ secrets.RCLONE_CONFIG }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4.1.4
+        uses: actions/checkout@v4.1.5
       - name: Check Kernel Version
         id: get_version
         run: |

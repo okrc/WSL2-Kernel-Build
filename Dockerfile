@@ -6,7 +6,7 @@ ENV TZ=${TZ}
 RUN set -eux; \
     apt-get update; \
     DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends --yes \
-    curl ca-certificates gpg xz-utils make flex bison libssl-dev libelf-dev bc python3-minimal dwarves tzdata; \
+    curl ca-certificates gpg xz-utils make flex bison libssl-dev libelf-dev bc python3-minimal dwarves tzdata cpio; \
     curl -fsSL https://apt.llvm.org/llvm-snapshot.gpg.key | \
     gpg --dearmor -o /usr/share/keyrings/llvm-apt-archive-keyring.gpg; \
     . /etc/os-release; \

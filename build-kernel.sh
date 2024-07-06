@@ -2,7 +2,7 @@
 set -e
 
 if [ ! -f 'kernel.tar.xz' ]; then
-    KERNEL_URL=https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-6.9.8.tar.xz
+    KERNEL_URL=https://api.github.com/repos/microsoft/WSL2-Linux-Kernel/tarball/linux-msft-wsl-6.6.36.3
     curl -C- -sL ${KERNEL_URL} -o kernel.tar.xz
 fi
 
